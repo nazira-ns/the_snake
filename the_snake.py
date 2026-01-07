@@ -42,6 +42,17 @@ def draw_rect(
     pygame.draw.rect(surface, color, rect)
 
 
+# ВАЖНО: эти переменные должны существовать в модуле (так требуют тесты).
+pygame.init()
+try:
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+except pygame.error:
+    # Если в окружении нет видеодрайвера, создаём Surface без окна.
+    screen = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+clock = pygame.time.Clock()
+
+
 class GameObject:
     """Base game object with position and color."""
 
@@ -143,13 +154,6 @@ def handle_keys(snake: Snake) -> bool:
 
 def main() -> None:
     """Run the Snake game loop."""
-    pygame.init()
-
-    screen = pygame.display.set_mode(
-        (SCREEN_WIDTH, SCREEN_HEIGHT),
-    )
-    clock = pygame.time.Clock()
-
     snake = Snake()
     apple = Apple()
 
