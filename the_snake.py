@@ -26,17 +26,30 @@ LEFT = (-1, 0)
 RIGHT = (1, 0)
 
 
-def draw_rect(surface: pygame.Surface, color: Tuple[int, int, int], pos: Tuple[int, int]) -> None:
+def draw_rect(
+    surface: pygame.Surface,
+    color: Tuple[int, int, int],
+    pos: Tuple[int, int],
+) -> None:
     """Draw a single grid cell (rectangle) on the given surface."""
     x, y = pos
-    rect = pygame.Rect(x * GRID_SIZE, y * GRID_SIZE, GRID_SIZE, GRID_SIZE)
+    rect = pygame.Rect(
+        x * GRID_SIZE,
+        y * GRID_SIZE,
+        GRID_SIZE,
+        GRID_SIZE,
+    )
     pygame.draw.rect(surface, color, rect)
 
 
 class GameObject:
     """Base game object with position and color."""
 
-    def __init__(self, position: Tuple[int, int] = (0, 0), body_color: Tuple[int, int, int] = (255, 255, 255)):
+    def __init__(
+        self,
+        position: Tuple[int, int] = (0, 0),
+        body_color: Tuple[int, int, int] = (255, 255, 255),
+    ) -> None:
         """Initialize the game object with position and body color."""
         self.position = position
         self.body_color = body_color
@@ -76,7 +89,10 @@ class Snake(GameObject):
         """Return the current position of the snake's head."""
         return self.positions[0]
 
-    def update_direction(self, new_direction: Tuple[int, int]) -> None:
+    def update_direction(
+        self,
+        new_direction: Tuple[int, int],
+    ) -> None:
         """Update movement direction, preventing a 180-degree turn."""
         opposite = (-self.direction[0], -self.direction[1])
         if new_direction != opposite:
@@ -86,12 +102,14 @@ class Snake(GameObject):
         """Move the snake one step forward (with wrap-around)."""
         head_x, head_y = self.get_head_position()
         dir_x, dir_y = self.direction
-        new_head = ((head_x + dir_x) % GRID_WIDTH, (head_y + dir_y) % GRID_HEIGHT)
+
+        new_head = (
+            (head_x + dir_x) % GRID_WIDTH,
+            (head_y + dir_y) % GRID_HEIGHT,
+        )
 
         self.positions.insert(0, new_head)
         self.position = new_head
-
-        # Remove tail segment to keep the length constant (growth handled elsewhere).
         self.positions.pop()
 
     def reset(self) -> None:
@@ -127,7 +145,9 @@ def main() -> None:
     """Run the Snake game loop."""
     pygame.init()
 
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode(
+        (SCREEN_WIDTH, SCREEN_HEIGHT),
+    )
     clock = pygame.time.Clock()
 
     snake = Snake()
@@ -141,7 +161,6 @@ def main() -> None:
 
         snake.move()
 
-        # If the snake eats the apple, grow by adding one more segment.
         if snake.get_head_position() == apple.position:
             snake.positions.append(snake.positions[-1])
             apple.randomize_position()
